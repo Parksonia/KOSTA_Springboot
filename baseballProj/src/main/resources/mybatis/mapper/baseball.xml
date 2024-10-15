@@ -5,9 +5,34 @@
 	
 <!-- dao인터페이스 설정 -->	
 <mapper namespace="com.kosta.baseball.dao.BaseballDao">
-	<insert id="insertPlayer" parameterType="player" useGeneratedKeys="true" keyProperty="num">
+	<insert id="registPlayer" parameterType="player" useGeneratedKeys="true" keyProperty="num">
 		insert into player(name,backnum,teamnum)values(#{name},#{backNum},#{teamNum})
 	</insert>
+	
+	<insert id="registTeam" parameterType="team" useGeneratedKeys="true" keyProperty="num">
+		insert into team(name,loc) values(#{name},#{loc})
+	</insert>	
+	
+	<select id="selectAllTeam" resultType="team">
+		select * from team
+	</select>
+	
+	<select id="selectTeamParamName" resultType="team">
+		select * from team where name = #{name}
+	</select>
+	
+	<select id="selectTeamParamNum" resultType="team">
+		select * from team where num = #{num}
+	</select>
+	
+	<select id="selectTeamParamLoc" resultType="team">
+		select * from team where loc = #{loc}
+	</select>
+	
+	
+	<select id="selectPlayer" resultType="player">
+		select p.num as num, p.name as name, p.backnum as backNum,p.teamnum as teamNum, t.name as teamName from player p join team t on (p.teamnum = t.num) where p.name #{name}
+	</select>
 	
 		
 		
