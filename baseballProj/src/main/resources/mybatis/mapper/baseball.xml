@@ -5,6 +5,10 @@
 	
 <!-- dao인터페이스 설정 -->	
 <mapper namespace="com.kosta.baseball.dao.BaseballDao">
+	<insert id="insertPlayer" parameterType="player" useGeneratedKeys="true" keyProperty="num">
+		insert into player(name,backnum,teamnum)values(#{name},#{backNum},#{teamNum})
+	</insert>
 	
-	
+		
+		
 </mapper>

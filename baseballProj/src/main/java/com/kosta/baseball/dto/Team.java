@@ -14,6 +14,6 @@ import lombok.ToString;
 public class Team {
 
 	private Integer num;
-	private String name;
+	private String teamName;
 	private String loc;
 }

@@ -14,8 +14,9 @@ local.properties
 .loadpath
 .recommenders
 
-###DB ###
-context-jdbc.xml
+##db설정### 
+application.properties
+
 
 # External tool builders
 .externalToolBuilders/

@@ -11,6 +11,7 @@ public class Player {
 
 	private Integer num;
 	private String name;
-	private Integer backnum;
-	private Integer tramnum;
+	private Integer backNum;
+	private Integer teamNum;
+	private String teamName;
 }
