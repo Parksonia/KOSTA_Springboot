@@ -48,43 +48,44 @@ public class BaseBallServiceImpl implements BaseballService {
 	@Override
 	public void registPlayerWithTeamName(Player player) throws Exception {
 		Team team = baseballDao.selectTeamParamName(player.getTeamName());
+		System.out.println(team.getNum());
 		player.setTeamNum(team.getNum());
-		baseballDao.insertPlayer(player);
+		
+		baseballDao.registPlayer(player);
 	}
 
 
 	@Override
 	public void registPlayerWithTeamNum(Player player) throws Exception {
-		
+		baseballDao.registPlayer(player);
 		
 	}
 
 
 	@Override
-	public Player playerInfoByNum(Integer num) throws Exception {
-		
-		return null;
+	public Player playerInfoByNum(Integer num) throws Exception {	
+		return baseballDao.selectPlayerByNum(num);
 	}
 
 
 	@Override
 	public List<Player> playerInfoByName(String name) throws Exception {
 		
-		return null;
+		return baseballDao.selectPlayerByName(name);
 	}
 
 
 	@Override
 	public List<Player> playerListInTeamByTeamNum(Integer teamNum) throws Exception {
 		
-		return null;
+		return baseballDao.selectPlayerListByTeamNum(teamNum);
 	}
 
 
 	@Override
 	public List<Player> playerListInTeamByTeamName(String teamName) throws Exception {
 		
-		return null;
+		return baseballDao.selectPlayerListByTeamName(teamName);
 	}
 	
 }

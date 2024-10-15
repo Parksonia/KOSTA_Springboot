@@ -5,6 +5,7 @@
 	
 <!-- dao인터페이스 설정 -->	
 <mapper namespace="com.kosta.baseball.dao.BaseballDao">
+	
 	<insert id="registPlayer" parameterType="player" useGeneratedKeys="true" keyProperty="num">
 		insert into player(name,backnum,teamnum)values(#{name},#{backNum},#{teamNum})
 	</insert>
@@ -17,7 +18,7 @@
 		select * from team
 	</select>
 	
-	<select id="selectTeamParamName" resultType="team">
+	<select id="selectTeamParamName" parameterType="String" resultType="team">
 		select * from team where name = #{name}
 	</select>
 	
@@ -30,10 +31,24 @@
 	</select>
 	
 	
-	<select id="selectPlayer" resultType="player">
-		select p.num as num, p.name as name, p.backnum as backNum,p.teamnum as teamNum, t.name as teamName from player p join team t on (p.teamnum = t.num) where p.name #{name}
+	<select id="selectPlayerByName" resultType="player">
+		select p.num as num, p.name as name, p.backnum as backNum,p.teamnum as teamNum, t.name as teamName from player p left join team t on (p.teamnum = t.num) 
+		where p.name = #{name}
 	</select>
 	
-		
-		
+
+	<select id="selectPlayerByNum" resultType="player">
+		select p.num as num, p.name as name, p.backnum as backNum,p.teamnum as teamNum, t.name as teamName from player p left join team t on (p.teamnum = t.num)
+		 where p.num = #{num}
+	</select>
+	
+	
+	<select id="selectPlayerListByTeamNum" resultType="player">
+		select * player where teamnum = #{teamNum}
+	</select>	
+	
+	<select id="selectPlayerListByTeamName" resultType="player">
+		select p.num as num, p.name as name, p.backnum as backNum,p.teamnum as teamNum, t.name as teamName from player p left join team t on (p.teamnum = t.num) 
+		where t.name = #{teamName}
+	</select>	
 </mapper>

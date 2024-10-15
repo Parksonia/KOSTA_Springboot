@@ -23,20 +23,20 @@ public interface BaseballDao {
 	// 4. 지역으로 팀 조회
 	List<Team> selectTeamParamLoc(@Param("loc")String loc)throws Exception;
 	
-	// 5. 선수 등록(팀이름으로) 
-	void registPlayer(Player player);
-	
-	// 6. 선수 등록(팀번호로) 
+	// 5. 선수 등록(팀이름으로) ,6. 선수 등록(팀번호로)
+	void registPlayer(Player player) throws Exception;
 	
 	// 7. 선수 조회(선수번호로, 팀이름포함) 
+	Player selectPlayerByNum(@Param("num")Integer num) throws Exception;
+	
 	// 8. 선수 조회(선수이름으로, 팀이름포함) 
+	List<Player> selectPlayerByName(@Param("name")String name) throws Exception;
+	
 	// 9. 특정 선수 목록 조회(팀번호로) 
+	List<Player>selectPlayerListByTeamNum(@Param("teamNum")Integer teamNum) throws Exception;
+	
 	// 10. 특정팀 선수 목록 조회(팀이름으로) 
-	void insertPlayer(Player player) throws Exception;
-	
-	List<Team> sellectAllTeam() throws Exception;
-	
-	List<Player>selectPlayer(@Param("name")String name) throws Exception;
+	List<Player> selectPlayerListByTeamName(@Param("teamName")String teamName) throws Exception;
 	
 	
 	
