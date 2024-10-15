@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--dtd설정  -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+	
+<!-- dao인터페이스 설정 -->	
+<mapper namespace="com.kosta.baseball.dao.BaseballDao">
+	
+	
+</mapper>
