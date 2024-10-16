@@ -1,7 +1,7 @@
 package ex02;
 
-//Stream 중간 연산
-import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 class Student implements Comparable<Student> {
@@ -49,7 +49,7 @@ class Student implements Comparable<Student> {
 
 }
 
-public class StreamTest4 {
+public class StreamTest1 {
 
 
 	public static void main(String[] args) {
@@ -74,8 +74,11 @@ public class StreamTest4 {
 //				.thenComparing(Comparator.reverseOrder())) //반이 같을 경우 정렬 역순
 //			.forEach(System.out::println);
 //	
-		studStream.filter(s->s.getBan()==1).map(Student::getName).forEach(System.out::println); //김자바 신자바 안자바
+//		studStream.filter(s->s.getBan()==1).map(Student::getName).forEach(System.out::println); //김자바 신자바 안자바
+//		studStream.filter(s->s.getBan()==1).peek(s->System.out.println(s)).map(Student::getName).forEach(System.out::println); //peek 스트림 데이터를 소모하지 않는다.
 	
+		List<String> studName = studStream.filter(s->s.getBan()==3).map(Student::getName).collect(Collectors.toList());
+		System.out.println(studName);  //이자바,나자바
 		
 		
 	}
