@@ -44,7 +44,7 @@
 	
 	
 	<select id="selectPlayerListByTeamNum" resultType="player">
-		select * player where teamnum = #{teamNum}
+		select * from player where teamnum = #{teamNum}
 	</select>	
 	
 	<select id="selectPlayerListByTeamName" resultType="player">
