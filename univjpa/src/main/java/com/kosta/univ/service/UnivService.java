@@ -19,19 +19,28 @@ public interface UnivService {
 	
 	//학생 이름으로 학생목록 조회
 	List<StudentDto>studentListByName(String studName) throws Exception;
+	// dto로 전달
+	StudentDto studentInfoByStudName(String studName) throws Exception;
+	
 	//제1전공으로 학생목록 조회
-	List<StudentDto>studentListInDept1ByDeptNmae(String deptName) throws Exception;
+	List<StudentDto>studentListInDept1ByDeptName(String deptName) throws Exception;
 	List<StudentDto>studentListInDept1ByDeptNo(Integer deptNo) throws Exception;
 	//제2전공으로 학생목록 조회
-	List<StudentDto>studentListInDept2ByDeptNmae(String deptName) throws Exception;
+	List<StudentDto>studentListInDept2ByDeptName(String deptName) throws Exception;
 	List<StudentDto>studentListInDept2ByDeptNo(Integer deptNo) throws Exception;
 
 	//학년으로 학생 목록 조회
 	List<StudentDto>studentListByGrade(Integer grade) throws Exception;
 	//담당 교수가 없는 학생 목록 조회
 	List<StudentDto>studentListByNoProfessor() throws Exception;	
+	//담당 교수번호로 학생 목록 조회
+	List<StudentDto>studentListByProfNo(Integer profNo) throws Exception;	
+		
+	
 	//학번으로 학생 조회
 	StudentDto studentByStudNo(Integer studeNo) throws Exception;
+	//이름으로 학생 조회
+	//StudentDto studentByStudName(String studeName) throws Exception;
 	//주민번호로 학생 조회
 	StudentDto studentByJumin(String jumin) throws Exception;
 
@@ -54,8 +63,10 @@ public interface UnivService {
 	DepartmentDto departmentByDeptNo(Integer deptNo) throws Exception;
 	//학과 이름으로 학과 조회
 	DepartmentDto departmentByDeptName(String deptName) throws Exception;
+
 	//학과(part)로 학과 목록 조회
-	List<DepartmentDto> dapartmentListByPart(String part)throws Exception;
+	List<DepartmentDto> departmentByDeptPart(Integer part) throws Exception;
+	
 	//위치하는 건물로 학과 목록 조회
 	List<DepartmentDto> dapartmentListByBuild(String build)throws Exception;
 	

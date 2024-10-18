@@ -64,10 +64,9 @@ public class Student {
 				+ ", birthday=" + birthday + ", tel=" + tel + ", height=" + height + ", weight=" + weight
 				+ ", professor=" + professor + ", department1=" + department1 + ", department2=" + department2 + "]";
 	}
-
 	
 	public StudentDto toDto() {
-		return StudentDto.builder()
+		StudentDto studentDto = StudentDto.builder()
 				.studNo(studNo)
 				.name(name)
 				.id(id)
@@ -77,13 +76,37 @@ public class Student {
 				.tel(tel)
 				.height(height)
 				.weight(weight)
-				.deptNo1(department1.getDeptno())
-				.deptNo2(department2.getDeptno())
-				.dname1(department1.getDname())
-				.dname2(department2.getDname())
-				.profNo(professor.getProfNo())
-				.profName(professor.getName())
-				.build();			
+				.build();
+		  
+		if (department1 != null) {
+		        if (department1.getDeptno() != null) {
+		            studentDto.setDeptNo1(department1.getDeptno());
+		        }
+		        if (department1.getDname() != null) {
+		            studentDto.setDname1(department1.getDname());
+		        }
+		    }
+
+		    if (department2 != null) {
+		        if (department2.getDeptno() != null) {
+		            studentDto.setDeptNo2(department2.getDeptno());
+		        }
+		        if (department2.getDname() != null) {
+		            studentDto.setDname2(department2.getDname());
+		        }
+		    }
+
+		    if (professor != null) {
+		        if (professor.getProfNo() != null) {
+		            studentDto.setProfNo(professor.getProfNo());
+		        }
+		        if (professor.getName() != null) {
+		            studentDto.setProfName(professor.getName());
+		        }
+		    }
+
+
+		 return studentDto;
 	}
 	
 }
