@@ -16,8 +16,8 @@ public interface BoardService {
 	BoardDto boardDetail(Integer num) throws Exception;
 	Integer checkHeart(String memberId, Integer boardNum) throws Exception;
 	Integer boardModify(BoardDto board, MultipartFile file, MultipartFile dfile) throws Exception;
-	List<BoardDto> boardList(PageInfo page) throws Exception;
+	List<BoardDto> boardList(PageInfo page,String type,String word) throws Exception;
 	boolean toggleHeart(String id, Integer boardNum) throws Exception;
-	void fileDown(HttpServletRequest request, HttpServletResponse response) throws Exception;	
+		
 	//void imageView(HttpServletRequest request, OutputStream out, String file) throws Exception;
 }

@@ -1,14 +1,17 @@
 package com.kosta.boardjpa.controller;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
@@ -22,8 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kosta.boardjpa.dto.BoardDto;
-import com.kosta.boardjpa.entity.BFile;
-import com.kosta.boardjpa.entity.Member;
+import com.kosta.boardjpa.dto.MemberDto;
 import com.kosta.boardjpa.service.BoardService;
 import com.kosta.boardjpa.utils.PageInfo;
 
@@ -37,16 +39,24 @@ public class BoardController {
 
 	@Autowired
 	private HttpSession session;
+	
+	@Value("${upload.path}")
+	private String downloadPath;
+	
 
 	@GetMapping("/boardList")
-	public ModelAndView boardList(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
+	public ModelAndView boardList(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+								@RequestParam(value="type",required = false)String type,
+								@RequestParam(value="word",required = false)String word) {
 		ModelAndView mav = new ModelAndView();
 		try {
 			PageInfo pageInfo = new PageInfo();
 			pageInfo.setCurPage(page);
-			List<BoardDto> boardList = boardService.boardList(pageInfo);
+			List<BoardDto> boardList = boardService.boardList(pageInfo,type,word);
 			mav.addObject("boardList", boardList);
 			mav.addObject("pageInfo", pageInfo);
+			mav.addObject("type", type);
+			mav.addObject("word", word);
 			mav.setViewName("boardlist");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -59,14 +69,14 @@ public class BoardController {
 	@GetMapping("/boardDetail")
 	public ModelAndView boardDetail(@RequestParam("num") Integer num) {
 		ModelAndView mav = new ModelAndView();
-//		Member member = (Member) session.getAttribute("member");
+		MemberDto memberDto = (MemberDto) session.getAttribute("member");
 		try {
 			BoardDto board = boardService.boardDetail(num); // boardService.boardDetail(num) 리턴타입이 board라서
 			mav.addObject("board", board);
-//			if (member != null) {
-//				Integer hnum = boardService.checkHeart(member.getId(), num);
-//				mav.addObject("heart", hnum);
-//			}
+			if (memberDto != null) {
+				Integer hnum = boardService.checkHeart(memberDto.getId(), num);
+				mav.addObject("heart", hnum);
+			}
 			mav.setViewName("boarddetail");
 
 		} catch (Exception e) {
@@ -98,7 +108,7 @@ public class BoardController {
 		}
 	}
 
-	@GetMapping("/boardModify")
+	@GetMapping("/boardModify") // @GetMapping("/boardModify/{num}" 하고 @PathVariable Integer num) 해도 됨
 	public ModelAndView boardModify(@RequestParam("num") Integer num) {
 		ModelAndView mav = new ModelAndView();
 		try {
@@ -114,10 +124,12 @@ public class BoardController {
 	}
 
 	@PostMapping("/boardModify")
-	public String boardModify(BoardDto board, MultipartFile file, MultipartFile dfile, Model model) {
+	public String boardModify(BoardDto boardDto, @RequestPart(value = "file", required = false) MultipartFile file,
+			@RequestPart(value = "dfile", required = false) MultipartFile dfile, Model model) {
 		try {
-			Integer num = boardService.boardModify(board, file, dfile);
-			return "redirect:boardDetail?num=" + num;
+			Integer boardNum = boardService.boardModify(boardDto, file, dfile);
+			 
+			return "redirect:boardDetail?num=" + boardDto.getNum();
 		} catch (Exception e) {
 			model.addAttribute("err", e.getMessage());
 			return "err";
@@ -126,30 +138,35 @@ public class BoardController {
 
 	@PostMapping("/heart")
 	@ResponseBody
-	public String heart(@RequestParam("num") Integer num) {
+	public ResponseEntity<String> heart(@RequestParam("num") Integer num) {
 		try {
-			boolean heart = boardService.toggleHeart(((Member) session.getAttribute("member")).getId(), num);
-			return String.valueOf(heart);
+			boolean heart = boardService.toggleHeart(((MemberDto) session.getAttribute("member")).getId(), num);
+			return new ResponseEntity<String>(String.valueOf(heart),HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "false";
+			return  new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 	}
-//
-//	@GetMapping("/fileDown")
-//	public void fileDown(@RequestParam("file") String filename, HttpServletResponse response) {
-//		String path = "C:/P/upload/";
-//		BFile file = new BFile(path, filename);
-//		response.setContentType("application/download");
-//		response.setContentLength((int) file.length());
-//		response.setHeader("Content-disposition", "attachment;filename=\"" + filename + "\"");
-//		try {
-//			OutputStream out = response.getOutputStream();
-//			FileInputStream fis = new FileInputStream(file);
-//			FileCopyUtils.copy(fis, out);
-//			fis.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
+
+	@GetMapping("/fileDown")
+	public void fileDown(@RequestParam("file") String filename, HttpServletResponse response) {
+		
+		try {
+			
+		FileInputStream fis = new FileInputStream(new File(downloadPath,filename));
+		
+		//파일 형식 얻어오기
+		String mimeType ="application/octet-stream" ; // octet-stream 8비트로 된 일련의 데이터를 뜻함
+		
+		response.setContentType(mimeType);
+	
+		String encoding = new String (filename.getBytes("utf-8"),"8859_1");// 한글 파일명 깨짐 방지
+		response.setHeader("Content-disposition", "attachment;filename=\"" +encoding);
+
+			FileCopyUtils.copy(fis,response.getOutputStream());
+			fis.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

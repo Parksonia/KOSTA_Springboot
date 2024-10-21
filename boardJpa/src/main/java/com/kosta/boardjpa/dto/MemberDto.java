@@ -23,6 +23,7 @@ public class MemberDto {
 	private String address;
 	private String nickname;
 	private byte[] profileImage;
+	private String profileImageStr;
 
 	//ModelMapper 활용 dto와 entity가 완전하게 동일할 경우에 사용 가늫하다.
 	public Member toEntity() {

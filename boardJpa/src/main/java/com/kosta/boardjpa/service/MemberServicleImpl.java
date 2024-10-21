@@ -1,5 +1,7 @@
 package com.kosta.boardjpa.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.kosta.boardjpa.dto.MemberDto;
@@ -28,8 +30,8 @@ public class MemberServicleImpl implements MemberService {
 
 	@Override
 	public boolean checkDoubleId(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return memberRepo.findById(id).isPresent();
 	}
 
 }

@@ -13,6 +13,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
@@ -67,15 +68,25 @@ public class Board {
 	@Override
 	public String toString() {
 		return "Board [num=" + num + ", subject=" + subject + ", content=" + content + ", createDate=" + createDate
-				+ ", viewCount=" + viewCount + ", member=" + member +"]";
+				+ ", viewCount=" + viewCount + ", member=" + member +", imageFileNum"+imageFile.getNum()+
+				", uploadFileNum"+uploadFile.getNum()+"]";
 	} 
 	
 	public BoardDto toDto() {
 		BoardDto boardDto = BoardDto.builder()
 							.num(num)
 							.subject(subject).content(content).createDate(createDate).viewCount(viewCount)
-							.writer(member.getId()).nickName(member.getNickname()).profileImage(member.getProfileImage())
+							.writer(member.getId()).nickname(member.getNickname())
 							.build();
+		
+		
+		if(member.getProfileImage()!=null) {
+			try {
+				boardDto.setProfileImage(new String(Base64.encodeBase64(member.getProfileImage()),"UTF-8"));
+			} catch (Exception e) {
+					e.printStackTrace();
+			}
+		}
 		
 		if(imageFile !=null) {
 			boardDto.setImgFileNum(imageFile.getNum());

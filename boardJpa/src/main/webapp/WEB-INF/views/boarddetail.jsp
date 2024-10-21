@@ -18,7 +18,7 @@
 $(function() {
 	$('#heart').click(function() {
 		$.ajax({
-			url:'heart',
+			url:'/heart',
 			type:'post',
 			async:true,
 			dataType:'text',
@@ -69,7 +69,9 @@ $(function() {
 </table>
 <br>
 <div id="commandCell">
+	<c:if test="${member.id eq board.writer }">
 	<a href="boardModify?num=${board.num }">수정</a>&nbsp;&nbsp;&nbsp;
+	</c:if>
 	<a href="boardList">목록</a>&nbsp;&nbsp;&nbsp;
 	<c:if test="${member.id ne null }">
 		<c:choose>

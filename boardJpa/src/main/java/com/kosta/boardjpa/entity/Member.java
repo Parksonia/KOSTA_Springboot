@@ -1,7 +1,6 @@
 package com.kosta.boardjpa.entity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -11,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
 
 import com.kosta.boardjpa.dto.MemberDto;
@@ -65,7 +65,15 @@ public class Member {
 	
 	public MemberDto toDto() {
 		ModelMapper mapper = new ModelMapper();
-		return mapper.map(this,MemberDto.class);
+		MemberDto  memberDto =  mapper.map(this,MemberDto.class);
+		if(profileImage !=null) {
+			try {
+				memberDto.setProfileImageStr(new String(Base64.encodeBase64(profileImage),"UTF-8"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		 return memberDto;
 	}
 	
 

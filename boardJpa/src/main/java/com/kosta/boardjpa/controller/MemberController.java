@@ -2,6 +2,7 @@ package com.kosta.boardjpa.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kosta.boardjpa.dto.MemberDto;
 import com.kosta.boardjpa.service.MemberService;
@@ -31,8 +34,11 @@ public class MemberController {
 	}
 	
 	@PostMapping("/join")
-	public String join(@ModelAttribute MemberDto member,Model model) {
+	public String join(@ModelAttribute MemberDto member,@RequestPart(value = "file", required = false) MultipartFile file,Model model) {
 		try {
+			if(file !=null && !file.isEmpty()) {
+				member.setProfileImage(file.getBytes());
+			}
 			memberService.join(member);
 			return "login";
 		} catch (Exception e) {
@@ -43,7 +49,7 @@ public class MemberController {
 	}
 	
 	
-	@PostMapping("/memberDoubleId")
+	@PostMapping("/memberDoubldId")
 	@ResponseBody
 	public String memberDoubleId(@RequestParam("id") String id) {
 		try {
@@ -64,8 +70,10 @@ public class MemberController {
 	public String login(@RequestParam("id") String id, @RequestParam("password") String password, @RequestParam(name="type", required=false) String autoLogin, Model model) {
 		try {
 			MemberDto member = memberService.login(id, password);
+	
 			member.setPassword("");
 			session.setAttribute("member", member); //member 정보를 session에 저장 
+			
 			return "redirect:boardList"; //컨트롤러의 boardList를 다시 요청해야 다시 조회해서 리스트를 조회할 수 있음.
 		} catch (Exception e) {
 			e.printStackTrace();
