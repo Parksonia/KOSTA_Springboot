@@ -14,19 +14,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemberDto {
-
-	private String id;
 	
+	
+	private String id;
 	private String name;
 	private String password;
 	private String email;
 	private String address;
 	private String nickname;
-	private String profileImage;
+	private byte[] profileImage;
+	private String profileImageStr;
 
 	
-	private ModelMapper modelMapper;
 	public Member toEntity() {
-		return (Member)modelMapper.map(this, Member.class);
+		return Member.builder()
+				 .id(id)
+				 .name(name)
+				 .nickname(nickname)
+				 .password(password)
+				 .email(email)
+				 .address(address)
+				 .profileImage(profileImage)
+				 .build();
 	}
+	
 }

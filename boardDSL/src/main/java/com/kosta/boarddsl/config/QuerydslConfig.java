@@ -10,10 +10,11 @@ import org.springframework.context.annotation.Configuration;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+//dsl 관련된 객체를 설정할 클래스
 @Configuration
 public class QuerydslConfig {
 
-	//@PersistenceContext : EntityManager를 빈으로 주입받기 위한 어노테이션
+	//@PersistenceContext : (Jpa의)EntityManager를 빈으로 주입받기 위한 어노테이션
 	@Autowired
 	@PersistenceContext
 	EntityManager entityManager;
@@ -29,3 +30,4 @@ public class QuerydslConfig {
 	}
 }
 ////@Bean :  객체를 만들어 줌 (자동 생성한 객체)
+//@Configuration :여러가지 Bean 객체를 설정할 수 있는 어노테이션

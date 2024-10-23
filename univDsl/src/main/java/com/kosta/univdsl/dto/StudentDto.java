@@ -49,6 +49,9 @@ public class StudentDto {
 					.tel(tel)
 					.height(height)
 					.weight(weight)
+					.deptNo1(deptNo1)
+					.deptNo2(deptNo2)
+					.profNo(profNo)
 					.build();
 		
 	}

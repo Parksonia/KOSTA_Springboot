@@ -16,13 +16,16 @@ import com.kosta.univdsl.dto.ProfessorDto;
 import com.kosta.univdsl.dto.StudentDto;
 import com.kosta.univdsl.service.UnivService;
 
-@RestController
+import lombok.RequiredArgsConstructor;
 
+@RestController
+@RequiredArgsConstructor
 public class UnivController {
 		
-		@Autowired
-		private UnivService univService;
-		
+	 
+	@Autowired
+	private UnivService univService;
+	
 		@PostMapping("/regDept")
 		public ResponseEntity<String> registDepartment(@RequestBody DepartmentDto deptDto) {
 			try {
@@ -203,7 +206,7 @@ public class UnivController {
 		@GetMapping("/profInfoByName") //교수이름으로 교수조회
 		public ResponseEntity<List<ProfessorDto>> professorByProfName(@RequestParam("profName")String profName) {
 			   try {
-				   List<ProfessorDto> professor = univService.professorListByDeptName(profName);
+				   List<ProfessorDto> professor = univService.professorListByProfName(profName);
 				   return new ResponseEntity<List<ProfessorDto>>(professor,HttpStatus.OK);
 			} catch (Exception e) {
 				e.printStackTrace();

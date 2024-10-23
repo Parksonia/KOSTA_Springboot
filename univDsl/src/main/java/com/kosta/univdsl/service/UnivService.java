@@ -19,9 +19,7 @@ public interface UnivService {
 	
 	//학생 이름으로 학생목록 조회
 	List<StudentDto>studentListByName(String studName) throws Exception;
-	// dto로 전달
-	StudentDto studentInfoByStudName(String studName) throws Exception;
-	
+
 	//제1전공으로 학생목록 조회
 	List<StudentDto>studentListInDept1ByDeptName(String deptName) throws Exception;
 	List<StudentDto>studentListInDept1ByDeptNo(Integer deptNo) throws Exception;
