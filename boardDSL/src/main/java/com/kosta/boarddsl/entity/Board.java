@@ -23,9 +23,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 //단방향 
 @Entity
-@Data
+@Data 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -59,6 +60,7 @@ public class Board {
 	private BFile uploadFile;
 
 
+	
 	public BoardDto toDto() {
 		BoardDto boardDto = BoardDto.builder()
 				.num(num)
@@ -87,11 +89,8 @@ public class Board {
 				
 			}	
 		}		
-		return null;
+		return boardDto;
 	
-		
-		
-		
 	}
 
 }

@@ -27,7 +27,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicInsert
-@Entity(name="file")
+@Entity
 public class BFile {
 
 	

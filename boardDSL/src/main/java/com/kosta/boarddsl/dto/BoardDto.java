@@ -31,19 +31,25 @@ public class BoardDto {
 	private String nickname;
 	private String profileImage;
 	
+	
 	public Board toEntity() {
-		return  Board.builder()
+	Board board =  Board.builder()
 						.num(num)
 						.subject(subject)
 						.content(content)
 						.viewCount(viewCount)
 						.createDate(createDate)
-						.imageFile(BFile.builder().num(imgFileNum).build())
-						.uploadFile(BFile.builder().num(uploadFileNum).build())
-						.viewCount(viewCount)
-						.createDate(createDate)
 						.member(Member.builder().id(writer).nickname(nickname).build())
 						.build();
+		if(imgFileNum !=null) {
+			board.setImageFile(BFile.builder().num(imgFileNum).build());
+		}
+		if(uploadFileNum!=null) {
+			board.setUploadFile(BFile.builder().num(uploadFileNum).build());
+		}
+		return board;
+						
+						
 		
 		
 		

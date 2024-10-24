@@ -17,7 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,10 +34,11 @@ import com.kosta.boarddsl.utils.PageInfo;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequiredArgsConstructor
+
 public class BoardController {
 	
-	private final BoardService boardService;
+	@Autowired
+	private BoardService boardService;
 
 	@Autowired
 	private HttpSession session;
@@ -169,4 +172,21 @@ public class BoardController {
 			e.printStackTrace();
 		}
 	}
+	@GetMapping("/boardDelete/{num}")
+	public String deleteBoard(@PathVariable Integer num,Model model) {
+		
+		try {
+		
+			boardService.deleteBoard(num);
+			
+			return "redirect:/boardList";
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("err",e.getMessage());
+			return "err";
+		}
+		
+	}
+	
+	
 }

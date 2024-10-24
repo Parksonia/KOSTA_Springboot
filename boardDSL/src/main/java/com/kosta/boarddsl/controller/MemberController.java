@@ -34,10 +34,12 @@ public class MemberController {
 	
 	@PostMapping("/join")
 	public String join(@ModelAttribute MemberDto member,@RequestPart(value = "file", required = false) MultipartFile file,Model model) {
+		
 		try {
 			if(file !=null && !file.isEmpty()) {
 				member.setProfileImage(file.getBytes());
 			}
+			
 			memberService.join(member);
 			return "login";
 		} catch (Exception e) {
