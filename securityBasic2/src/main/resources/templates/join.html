@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원가입</title>
+</head>
+<body>
+<!-- security가 인증을 위한 username, password 이름은 고정이다 변경해주려면 설정 따로 해야함  -->
+<form action="/joinProc" method="post">
+	<input type="text" name ="username" placeholder="username"><br/>
+	<input type="password" name ="password" placeholder="password"><br/>
+	<input type="email" name ="email" placeholder="email"><br/>
+	<select name="roles">
+		<option value="ROLE_USER">USER</option>
+		<option value="ROLE_ADMIN">ADMIN</option>
+		<option value="ROLE_MANAGER">MANAGER</option>
+	</select>
+	<button>회원가입</button>	
+</form>
+</body>
+</html>
