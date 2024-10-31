@@ -52,6 +52,7 @@ public class Account {
 	}
 	
 	public void withdraw(Integer money) throws Exception {
+		if(money<0) throw new Exception("출금액 오류");
 		if(balance < money) throw new Exception("잔액 부족");
 		balance -= money;
 	}
@@ -65,6 +66,9 @@ public class Account {
 				.grade(grade)
 				.build();
 	}
+	
+	
+	
 	
 }
 
