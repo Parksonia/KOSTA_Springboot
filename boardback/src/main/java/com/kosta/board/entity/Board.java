@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,8 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.relational.core.mapping.Embedded.Nullable;
 
 import com.kosta.board.dto.BoardDto;
@@ -55,7 +58,7 @@ public class Board {
 	@JoinColumn(name="writer")
 	private Member member;
 
-	@OneToMany(mappedBy="board" ,fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="board" ,fetch=FetchType.LAZY,cascade = CascadeType.REMOVE)
 	@Nullable
 	private List<BFile> fileList = new ArrayList<>();
 	

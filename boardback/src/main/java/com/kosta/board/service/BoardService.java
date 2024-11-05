@@ -12,7 +12,7 @@ public interface BoardService {
 	Integer boardWrite(BoardDto board,List<MultipartFile>fileList) throws Exception;
 	BoardDto boardDetail(Integer num) throws Exception;
 	Integer checkHeart(String memberId, Integer boardNum) throws Exception;
-	//Integer boardModify(BoardDto board, MultipartFile file, MultipartFile dfile) throws Exception;
+	Integer boardModify(BoardDto board,List<Integer>delFileNum,List<MultipartFile>fileList) throws Exception;
 	List<BoardDto> boardList(PageInfo page,String type,String word) throws Exception;
 	boolean toggleHeart(String id, Integer boardNum) throws Exception;
 	void deleteBoard(Integer boardNum) throws Exception;	

@@ -2,6 +2,7 @@ package com.kosta.board.service;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -63,10 +64,13 @@ public class BoardServiceImpl implements BoardService {
 
 	}
 
+	@Transactional // Dsl  이용하여 insert update 하는 경우 필수로 필요함
 	@Override
 	public BoardDto boardDetail(Integer num) throws Exception {
+		Board board = boardRepo.findById(num).orElseThrow(()->new Exception("글번호 오류"));
+		boardDslRepo.updateBoardViewCount(num, board.getViewCount()+1); // dsl에서 다이렉트로 연산할 수 없음 
 		
-		return boardRepo.findById(num).orElseThrow(()->new Exception("글번호 오류")).toDto();
+		return board.toDto();
 	}
 
 	@Override
@@ -75,84 +79,41 @@ public class BoardServiceImpl implements BoardService {
 		return boardDslRepo.findHeart(memberId, boardNum);
 	}
 
-//	@Override
-//	public Integer boardModify(BoardDto boardDto, MultipartFile imgfile, MultipartFile uploadfile) throws Exception {
-//		
-//		Board board = boardRepo.findById(boardDto.getNum()).orElseThrow(()->new Exception("글번호 오류"));
-//		board.setSubject(boardDto.getSubject());
-//		board.setContent(boardDto.getContent());
-//		
-//
-//		Integer bimgFileNum = null;
-//		Integer bupfileFileNum =null;
-//		
-//		if(imgfile !=null && !imgfile.isEmpty()) {
-//			
-//			//기존의 파일이 있을때-파일번호 임시저장
-//			if(board.getImageFile() != null) {
-////				여기에 삭제를 하면 참조 걸려 있기 때문에 에러 발생 전체 글 선 업데이트 후 그 이후에 이전 파일을 삭제해야함
-////				Integer fileNum = board.getImageFile().getNum();
-////				new File(uploadPath,fileNum+"").delete(); //디렉토리 삭제
-////				fileRepo.deleteById(fileNum); //테이블 삭제
-//				bimgFileNum = board.getImageFile().getNum();
-//				
-//			}
-//		
-//			BFile cImgFile = new BFile();
-//			cImgFile.setDirectory(uploadPath);
-//			cImgFile.setName(imgfile.getOriginalFilename());
-//			cImgFile.setSize(imgfile.getSize());
-//			cImgFile.setContentType(imgfile.getContentType());
-//			fileRepo.save(cImgFile);
-//			
-//			File newImgFile = new File(uploadPath,cImgFile.getNum()+"");
-//			imgfile.transferTo(newImgFile);
-//		
-//			board.setImageFile(cImgFile);
-//		}
-//		
-//		if(uploadfile !=null && !uploadfile.isEmpty()) {
-//			if(board.getUploadFile()!=null) {
-////				Integer fileNum = board.getUploadFile().getNum();
-////				new File(uploadPath,fileNum+"").delete();
-////				fileRepo.deleteById(fileNum);
-//				bupfileFileNum = board.getUploadFile().getNum();
-//			}
-//			
-//			BFile cUploadFile = new BFile();
-//			cUploadFile.setDirectory(uploadPath);
-//			cUploadFile.setName(uploadfile.getOriginalFilename());
-//			cUploadFile.setSize(uploadfile.getSize());
-//			cUploadFile.setContentType(uploadfile.getContentType());
-//			fileRepo.save(cUploadFile); 
-//			
-//			File newUpFile = new File(uploadPath,cUploadFile.getNum()+"");
-//			uploadfile.transferTo(newUpFile);
-//			
-//			
-//			board.setUploadFile(cUploadFile);
-//			
-//
-//		}
-//	
-		//AutoIncrement니까 save 해야 번호를 가져올 수 있음	,글수정 완료
-//		boardRepo.save(board);
-//		
-//		//파일 수정이 update 됐으니 이제 기존파일을 삭제 할 수 있다.
-//		if(bimgFileNum !=null ) {
-//			fileRepo.deleteById(bimgFileNum); //테이블 삭제
-//			new File(uploadPath,bimgFileNum+"").delete(); //디렉토리 삭제
-//			
-//		}
-//		if(bupfileFileNum !=null) {
-//			fileRepo.deleteById(bupfileFileNum); //테이블 삭제
-//			new File(uploadPath,bupfileFileNum+"").delete(); //디렉토리 삭제
-//			
-//		}
-//		
-//		
-//		return board.toDto().getNum();
-//	}
+	@Override
+	public Integer boardModify(BoardDto boardDto,List<Integer>delFileNum,List<MultipartFile>fileList) throws Exception {
+		
+		Board board = boardRepo.findById(boardDto.getNum()).orElseThrow(()->new Exception("글번호 오류"));
+		board.setSubject(boardDto.getSubject());
+		board.setContent(boardDto.getContent());
+		boardRepo.save(board);
+
+		if(delFileNum !=null) {
+			for(Integer fn:delFileNum ) {
+				File oldFile = new File(uploadPath,fn+"");
+				if(oldFile !=null) oldFile.delete(); //폴더에서 삭제
+				fileRepo.deleteById(fn); //테이블에서도 삭제 
+				
+			}
+			
+		}
+		if(fileList!=null &&fileList.size()>0) {
+			for(MultipartFile file:fileList) {
+				BFile bfile = new BFile();
+				bfile.setBoard(board);
+				bfile.setName(file.getOriginalFilename());
+				bfile.setDirectory(uploadPath);
+				bfile.setContentType(file.getContentType());
+				bfile.setSize(file.getSize());
+				fileRepo.save(bfile);
+				
+				File nFile = new File(uploadPath,bfile.getNum()+"");
+				file.transferTo(nFile);
+			}
+		}
+		
+		
+		return board.toDto().getNum();
+	}
 
 	@Override
 	public List<BoardDto> boardList(PageInfo page, String type, String word) throws Exception {
@@ -202,6 +163,7 @@ public class BoardServiceImpl implements BoardService {
 	public void deleteBoard(Integer boardNum) throws Exception {
 		// 참조 되어 있는 heart도 삭제 되야함
 	
+		
 		heartRepo.deleteByBoardNum(boardNum);
 		
 		boardRepo.deleteById(boardNum);

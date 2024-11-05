@@ -38,9 +38,13 @@ public class BoardDto {
 						.subject(subject)
 						.content(content)
 						.viewCount(viewCount)
-						.createDate(createDate)
+						.createDate(createDate)					
 						.member(Member.builder().id(writer).nickname(nickname).build())
 						.build();
+//	if(createDate !=null) {
+//		board.setCreateDate(Date.valueOf(createDate));
+//	}
+	
 	
 		return board;
 						

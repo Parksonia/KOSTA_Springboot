@@ -6,5 +6,6 @@ import com.kosta.board.entity.BFile;
 
 public interface FileRepository extends JpaRepository<BFile, Integer> {
 
+	void deleteByBoardNum(Integer boardNum);
 }
 	

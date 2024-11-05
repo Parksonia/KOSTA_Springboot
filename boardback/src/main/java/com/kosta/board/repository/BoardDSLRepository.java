@@ -103,4 +103,14 @@ public class BoardDSLRepository {
 		
 	}
 	
+	public void updateBoardViewCount(Integer boardNum,Integer viewCount) throws Exception {
+		QBoard board = QBoard.board;
+		
+		jpaQueryFactory.update(board)
+			.set(board.viewCount,viewCount)
+			.where(board.num.eq(boardNum))
+			.execute();
+					
+	}	
+	
 }
