@@ -1,7 +1,9 @@
 package com.kosta.board.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 
@@ -33,6 +35,8 @@ public class Member {
 	private String password;
 	private String email;
 	private String address;
+	@Column(columnDefinition = "MEDIUMBLOB")
+	@Lob
 	private byte[] profileImage;
 	
 	

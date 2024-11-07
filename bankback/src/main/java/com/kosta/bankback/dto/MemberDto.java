@@ -22,6 +22,7 @@ public class MemberDto {
 	private String address;
 	private String nickname;
 	private String profileImage;
+	private String profileImageStr;
 	
 	@Autowired
 	private ModelMapper modelMapper;

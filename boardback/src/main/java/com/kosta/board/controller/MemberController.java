@@ -1,4 +1,4 @@
-package com.kosta.bankback.controller;
+package com.kosta.board.controller;
 
 import java.util.Map;
 
@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.kosta.bankback.dto.MemberDto;
-import com.kosta.bankback.service.MemberService;
+import com.kosta.board.dto.MemberDto;
+import com.kosta.board.service.MemberService;
 
 @RestController
 public class MemberController {
@@ -21,9 +23,10 @@ public class MemberController {
 	private MemberService memberService;
 	
 	@PostMapping("/join")
-	public ResponseEntity<String> join(@RequestBody MemberDto memberDto ) {
+	public ResponseEntity<String> join(MemberDto memberDto,
+			@RequestParam(name= "profile", required = false) MultipartFile file ) {
 		try {
-			memberService.join(memberDto);
+			memberService.join(memberDto,file);
 			return new ResponseEntity<String>(String.valueOf(true),HttpStatus.OK);
 			
 		} catch (Exception e) {
@@ -51,7 +54,7 @@ public class MemberController {
 	@GetMapping("/checkMemId/{id}")
 	public ResponseEntity<String> checkMemId(@PathVariable String id) {
 		try {
-			boolean check = memberService.checkDoubleId(id);
+			boolean check =memberService.checkDoubleId(id);
 			return new ResponseEntity<String>(String.valueOf(check),HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

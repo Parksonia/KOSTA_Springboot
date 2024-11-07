@@ -58,6 +58,7 @@ public class Member {
 				.address(address)
 				.nickname(nickname)
 				.profileImage(profileImage)
+				.profileImageStr(profileImage)
 				.build();
 		
 	}

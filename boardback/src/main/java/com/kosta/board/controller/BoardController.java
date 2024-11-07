@@ -109,9 +109,10 @@ public class BoardController {
 		}
 	}
 	@PostMapping("/boardModify")
-	public ResponseEntity<Integer> boardModify(@RequestBody BoardDto boardDto,
+	public ResponseEntity<Integer> boardModify(BoardDto boardDto,
 			@RequestParam(name= "delFile", required = false) Integer [] delFileNum,
 			@RequestParam(name= "file", required = false) MultipartFile[] files){
+	
 		try {
 			boardService.boardModify(boardDto,delFileNum==null?null:Arrays.asList(delFileNum),
 					files==null?null:Arrays.asList(files));
