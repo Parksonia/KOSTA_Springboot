@@ -16,7 +16,6 @@ public class JwtToken {
 				 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 	}
 
-	
 
 		public String makeRefreshToken(String username) {
 			

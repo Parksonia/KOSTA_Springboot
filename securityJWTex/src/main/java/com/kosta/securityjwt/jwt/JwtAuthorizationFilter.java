@@ -28,6 +28,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	@Autowired
 	private UserRepository userRepo;
 	
+	@Autowired
 	private JwtToken jwtToken = new JwtToken();
 	
 
@@ -116,6 +117,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 						.getClaim("sub")
 						.asString();
 				System.out.println(username);
+				
 				//2-2. username 체크
 				if(username == null || username.equals("")) throw new Exception("로그인 필요"); // 사용자가 없을때 
 				
@@ -128,12 +130,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 				
 				Map<String,String> map = new HashMap<>();
 				
-				map.put("access_token", reAccessToken);
-				map.put("refresh_token", reRefreshToken);
+				map.put("access_token", JwtProperties.TOKEN_PREFIX+reAccessToken);
+				map.put("refresh_token", JwtProperties.TOKEN_PREFIX+reRefreshToken);
 				String reToken = objectMapper.writeValueAsString(map); //map->jsonString
 				response.addHeader(JwtProperties.HEADER_STRING, reToken);
 				response.setContentType("application/json; charset=utf-8");
-				//response.getWriter().print("token");
+				response.getWriter().print("token");
 				
 				}catch(Exception e2) {
 				// 토큰이(access,refresh) 둘다 타당하지 않다는 의미...

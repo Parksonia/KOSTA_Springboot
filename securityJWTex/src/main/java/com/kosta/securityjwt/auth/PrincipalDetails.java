@@ -2,9 +2,12 @@ package com.kosta.securityjwt.auth;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.kosta.securityjwt.entity.User;
 
@@ -17,12 +20,21 @@ import lombok.Data;
 //그 User 오브젝트 타입은 UserDetails 타입이어야 한다.
 //즉 (Security ContextHolder(new Authentication(new User Details(new user)))
 @Data
-public class PrincipalDetails implements UserDetails {
+public class PrincipalDetails implements UserDetails,OAuth2User {
 
-		private User user;
-	
+		private User user;	
+		
+		private Map<String,Object>attributes ;
+		
 		public PrincipalDetails(User user) {
 			this.user = user;
+			
+			
+		}
+		public PrincipalDetails(User user, Map<String,Object>attributes ) {
+			this.user = user;
+			this.attributes = attributes;
+			
 		}
 		
 	
@@ -48,7 +60,11 @@ public class PrincipalDetails implements UserDetails {
 	@Override
 	public String getUsername() {
 		
-		return user.getUsername();
+		if(user !=null) {
+			return user.getUsername();
+		}else {
+			return String.valueOf(attributes.get("id"));
+		}	
 	}
 	
 	@Override
@@ -74,6 +90,20 @@ public class PrincipalDetails implements UserDetails {
 		//만약에 사이트에서 1년동안 로그인을 하지 않을 경우  휴면계정으로 전환하기로 했다면
 		//현재시간 - 마지막 로그인 시간을 계산하여 1년 초과 시 return false로 돌리면 됨
 		return true;
+	}
+
+
+	@Override
+	public Map<String, Object> getAttributes() {
+		
+		return attributes;
+	}
+
+
+	@Override
+	public String getName() {
+		
+		return user.getId()+"";
 	}
 
 }
