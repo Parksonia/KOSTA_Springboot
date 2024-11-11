@@ -14,6 +14,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import com.kosta.securityjwt.jwt.JwtAuthenticationFilter;
 import com.kosta.securityjwt.jwt.JwtAuthorizationFilter;
+import com.kosta.securityjwt.oauth.OAuthSuccessHandler;
 import com.kosta.securityjwt.oauth.PrincipalOAuth2UserService;
 import com.kosta.securityjwt.repository.UserRepository;
 
@@ -26,6 +27,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private OAuthSuccessHandler oAuthSuccessHandler; // @Component선언했음
 	
 	@Autowired
 	private PrincipalOAuth2UserService principalOAuth2UserService;
@@ -41,9 +45,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.csrf().disable() // csrf 공격 비활성화
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // session 비활성화
 
-		// 로그인
+		// 일반 로그인
 	      http.formLogin().disable() // 로그인 폼 비활성화
-	      .httpBasic().disable() // httpBasic은 header에 username,password를 암호화하지 않은 상태로 주고 받는다. 이를 사용하지 않겠다.
+	      .httpBasic().disable() // httpBasic은 header에 username,password를 암호화하지 않은 상태로 주고 받는다. 이를 사용하지 않겠다. // 토큰을 만들어야 해서 수동으로 처리하기 위함
 	      .addFilterAt(new JwtAuthenticationFilter(authenticationManager()), 
 	    		  UsernamePasswordAuthenticationFilter.class);
 
@@ -53,7 +57,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.redirectionEndpoint().baseUri("/oauth2/callback/*")
 			.and()
-			.userInfoEndpoint().userService(principalOAuth2UserService);
+			.userInfoEndpoint().userService(principalOAuth2UserService)
+			.and()
+			.successHandler(oAuthSuccessHandler);
 
 		http.addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
 			.authorizeRequests()

@@ -38,7 +38,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
 		//네이버
 		} else if(userRequest.getClientRegistration().getRegistrationId().equals("naver")) {
 			oAuth2UserInfo = new NaverUserInfo(oAuth2User.getAttribute("response"));
-			//네이버
+		
 		//지원x 소셜 로그인들	
 		}else {
 			System.out.println("카카오와 네이버만 지원합니다.");
