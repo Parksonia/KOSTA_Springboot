@@ -16,8 +16,10 @@ public class MemberDto {
 	
 	private String id;
 	private String name;
+	private String username;
 	private String password;
 	private String email;
+	private String roles;
 	private String address;
 	private String nickname;
 	private byte[] profileImage;
@@ -28,6 +30,8 @@ public class MemberDto {
 		return Member.builder()
 				 .id(id)
 				 .name(name)
+				 .username(username)
+				 .roles(roles)
 				 .nickname(nickname)
 				 .password(password)
 				 .email(email)

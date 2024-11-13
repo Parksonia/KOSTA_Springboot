@@ -2,6 +2,7 @@ package com.kosta.board.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -147,5 +148,27 @@ public class BoardController {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	@GetMapping("/fileDown")
+	public void fileDown(@RequestParam("file") String filename, HttpServletResponse response) {
+		
+		try {
+			
+		FileInputStream fis = new FileInputStream(new File(filePath,filename));
+		
+		//파일 형식 얻어오기
+		String mimeType ="application/octet-stream" ; // octet-stream 8비트로 된 일련의 데이터를 뜻함
+		
+		response.setContentType(mimeType);
+	
+		String encoding = new String (filename.getBytes("utf-8"),"8859_1");// 한글 파일명 깨짐 방지
+		response.setHeader("Content-disposition", "attachment;filename=\"" +encoding);
+
+			FileCopyUtils.copy(fis,response.getOutputStream());
+			fis.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	
 }

@@ -28,23 +28,28 @@ public class Member {
 	
 	@Id
 	private String id;
-	
-	
 	private String name;
 	private String nickname;
+	private String username;
 	private String password;
+	private String roles;
 	private String email;
 	private String address;
 	@Column(columnDefinition = "MEDIUMBLOB")
 	@Lob
 	private byte[] profileImage;
 	
-	
+	// OAuth를 위해 구성한 필드
+	private String provider;
+	private String providerId;
+
 	public MemberDto toDto() {
 		MemberDto memberDto = MemberDto.builder()
 					.id(id)
 					.nickname(nickname)
 					.password(password)
+					.roles(roles)
+					.username(username)
 					.email(email)
 					.address(address)
 					.profileImage(profileImage)

@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,10 +23,17 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
+	@Autowired 
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 	@PostMapping("/join")
 	public ResponseEntity<String> join(MemberDto memberDto,
 			@RequestParam(name= "profile", required = false) MultipartFile file ) {
 		try {
+			String rawPassword = memberDto.getPassword();
+			String encodingPassword =  bCryptPasswordEncoder.encode(rawPassword);
+			memberDto.setPassword(encodingPassword);
+			memberDto.setRoles("ROLE_USER");
 			memberService.join(memberDto,file);
 			return new ResponseEntity<String>(String.valueOf(true),HttpStatus.OK);
 			
@@ -54,7 +62,7 @@ public class MemberController {
 	@GetMapping("/checkMemId/{id}")
 	public ResponseEntity<String> checkMemId(@PathVariable String id) {
 		try {
-			boolean check =memberService.checkDoubleId(id);
+			boolean check = memberService.checkDoubleId(id);
 			return new ResponseEntity<String>(String.valueOf(check),HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
